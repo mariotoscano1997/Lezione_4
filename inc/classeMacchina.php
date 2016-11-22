@@ -25,6 +25,7 @@ class Macchina implements JsonSerializable{
   public function controllaArrivo(){
     if(isset($this->distanza[$this->passi-1])){
       if($this->distanza[$this->passi-1]>=100){
+        $this->distanza[$this->passi-1]=100; 
         return true;
       }else 
       return false;

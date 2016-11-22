@@ -1,1 +1,1 @@
-<?php
+<div id="mostraGara" ></div>
