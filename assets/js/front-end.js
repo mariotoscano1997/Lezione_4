@@ -5,6 +5,7 @@ var request = new XMLHttpRequest();
 var x=[];
 var n_dis=0;
 var n_arr=0;
+var intervallo;
 function main(){
 	
 	formInizio = document.getElementById('form_inizio');
@@ -71,33 +72,37 @@ function visualizza(risposta){
 		divGara.innerHTML+="<label style='width: 100px; margin-left: 10px;	'>"+risposta[i].nome+"</label>";
 		divGara.innerHTML+="<img id='macchina"+i+"' src='assets/img/"+risposta[i].colore+".png' style='height: 100px;position: relative;'></div> ";
 	}
-	vai(risposta);
-}		
-function vai(risposta){
-	
-	
-	var intervallo= setInterval(elaborazione(risposta),500);
+	intervallo= setInterval(elaborazione.bind(this, risposta),500);	
 
-}
+}		
+
+	
+	
+	
 function elaborazione(risposta){
 	console.log("sono nella funzione");
 	dimWin=window.innerWidth-400;
 	
 	if(n_arr<risposta.length){
-		
-			for(i=0; i<risposta.length && risposta[i].passi!=-1;i++){
+		console.log("if");
+			for(i=0; i<risposta.length ;i++){
+				if(risposta[i].passi!=-1){
+				console.log("cioa"+ i);
 							if(n_dis<risposta[i].passi){
 					spostamento=(dimWin*risposta[i].distanza[n_dis])/100;
 					console.log(spostamento + "della macchina" +i);
 					document.getElementById("macchina"+i).style.left= spostamento+"px";
 				}
 				else{ 
+					
 					n_arr++;
 					risposta[i].passi=-1;
+					console.log("sonon nel a"+ n_arr);
 				}
 			}
-			
 			n_dis++;
+			}
+			
 		
 	} else {
 		console.log("sono uscito");
