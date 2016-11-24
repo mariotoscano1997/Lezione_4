@@ -6,6 +6,7 @@ var x=[];
 var n_dis=0;
 var n_arr=0;
 var intervallo;
+dimWin=window.innerWidth-400;
 function main(){
 	
 	formInizio = document.getElementById('form_inizio');
@@ -68,9 +69,11 @@ function visualizza(risposta){
 	formInizio.style.display ="none";
 	risposta=JSON.parse(risposta);
 	for (i=0;i<risposta.length;i++){ 
-		divGara.innerHTML+="<div>"	;
-		divGara.innerHTML+="<label style='width: 100px; margin-left: 10px;	'>"+risposta[i].nome+"</label>";
-		divGara.innerHTML+="<img id='macchina"+i+"' src='assets/img/"+risposta[i].colore+".png' style='height: 100px;position: relative;'></div> ";
+		stringa="<div id='divPart"+i+"'>"
+		+"<label style='width: 100px; margin-left: 10px;	'>"+risposta[i].nome+"</label>"
+		+"<img src='assets/img/traguardo.png' style='height: 100px; position: relative; left:"+(dimWin+20)+"px;'>"
+		+"<img id='macchina"+i+"' src='assets/img/"+risposta[i].colore+".png' style='height: 100px;position: relative;'></div> ";
+		divGara.innerHTML+=stringa;
 	}
 	intervallo= setInterval(elaborazione.bind(this, risposta),500);	
 
@@ -80,29 +83,30 @@ function visualizza(risposta){
 	
 	
 function elaborazione(risposta){
-	console.log("sono nella funzione");
-	dimWin=window.innerWidth-400;
+		
 	
 	if(n_arr<risposta.length){
-		console.log("if");
+		console.log("Dentro l'if");
 			for(i=0; i<risposta.length ;i++){
 				if(risposta[i].passi!=-1){
-				console.log("cioa"+ i);
+				console.log(" questo è il controllo della macchina 0"+ i);
+				console.log(n_dis+"<"+risposta[i].passi);
 							if(n_dis<risposta[i].passi){
 					spostamento=(dimWin*risposta[i].distanza[n_dis])/100;
-					console.log(spostamento + "della macchina" +i);
+					console.log("la macchina "+i+" si è spostata di "+spostamento);
 					document.getElementById("macchina"+i).style.left= spostamento+"px";
 				}
 				else{ 
-					
 					n_arr++;
+					document.getElementById("divPart"+i).innerHTML+="<label style='position: absolute; left:"+dimWin/2+"px'>"+n_arr+"</label>";
+					
 					risposta[i].passi=-1;
-					console.log("sonon nel a"+ n_arr);
+					console.log("questa macchina"+i+" è arrivata"+ n_arr);
 				}
 			}
-			n_dis++;
-			}
 			
+			}
+			n_dis++;
 		
 	} else {
 		console.log("sono uscito");
