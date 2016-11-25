@@ -49,7 +49,6 @@ function aggiungiPartecipante(){
 	"value='"+l+"'>";
 }
 function invia(){
-	alert("ok");
 	for(i=0;i<l;i++){
 		nome=document.getElementById("user"+i).value;
 		colore=document.getElementById("color"+i).value;
@@ -65,20 +64,19 @@ function invia(){
 	return false;
 }
 function visualizza(risposta){
-	console.log(risposta);
 	formInizio.style.display ="none";
 	risposta=JSON.parse(risposta);
 	for (i=0;i<risposta.length;i++){ 
 		stringa="<div id='divPart"+i+"'>"
 		+"<label style='width: 100px; margin-left: 10px;	'>"+risposta[i].nome+"</label>"
-		+"<img src='assets/img/traguardo.png' style='height: 100px; position: relative; left:"+(dimWin+20)+"px;'>"
-		+"<img id='macchina"+i+"' src='assets/img/"+risposta[i].colore+".png' style='height: 100px;position: relative;'></div> ";
+		+"<img src='assets/img/traguardo.png' style='height: 100px; position: relative; left:"+(dimWin+150)+"px;'>"
+		+"<img id='macchina"+i+"' src='assets/img/"+risposta[i].colore+".png' style='height: 100px; position: relative'></div> ";
 		divGara.innerHTML+=stringa;
 	}
 	intervallo= setInterval(elaborazione.bind(this, risposta),400);	
 
 }		
-
+	
 	
 	
 	
@@ -86,22 +84,16 @@ function elaborazione(risposta){
 		
 	
 	if(n_arr<risposta.length){
-		console.log("Dentro l'if");
 			for(i=0; i<risposta.length ;i++){
 				if(risposta[i].passi!=-1){
-				console.log(risposta[i] +"  questo è il controllo della macchina 0"+ i);
-				console.log(n_dis+"<"+risposta[i].passi);
 							if(n_dis<risposta[i].passi){
 					spostamento=(dimWin*risposta[i].distanza[n_dis])/100;
-					console.log("la macchina "+risposta[i].nome+" si è spostata di "+spostamento);
 					document.getElementById("macchina"+i).style.left= spostamento+"px";
 				}
 				else{ 
 					n_arr++;
 					document.getElementById("divPart"+i).innerHTML+="<label style='position: absolute; left:"+dimWin/2+"px'>"+n_arr+"</label>";
-					
 					risposta[i].passi=-1;
-					console.log("questa macchina"+i+" è arrivata"+ n_arr);
 				}
 			}
 			
