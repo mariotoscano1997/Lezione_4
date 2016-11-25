@@ -75,7 +75,7 @@ function visualizza(risposta){
 		+"<img id='macchina"+i+"' src='assets/img/"+risposta[i].colore+".png' style='height: 100px;position: relative;'></div> ";
 		divGara.innerHTML+=stringa;
 	}
-	intervallo= setInterval(elaborazione.bind(this, risposta),500);	
+	intervallo= setInterval(elaborazione.bind(this, risposta),400);	
 
 }		
 
@@ -89,11 +89,11 @@ function elaborazione(risposta){
 		console.log("Dentro l'if");
 			for(i=0; i<risposta.length ;i++){
 				if(risposta[i].passi!=-1){
-				console.log(" questo è il controllo della macchina 0"+ i);
+				console.log(risposta[i] +"  questo è il controllo della macchina 0"+ i);
 				console.log(n_dis+"<"+risposta[i].passi);
 							if(n_dis<risposta[i].passi){
 					spostamento=(dimWin*risposta[i].distanza[n_dis])/100;
-					console.log("la macchina "+i+" si è spostata di "+spostamento);
+					console.log("la macchina "+risposta[i].nome+" si è spostata di "+spostamento);
 					document.getElementById("macchina"+i).style.left= spostamento+"px";
 				}
 				else{ 
