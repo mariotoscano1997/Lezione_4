@@ -1,29 +1,30 @@
 
-document.addEventListener('DOMContentLoaded', main);
-var l=0;
-var request = new XMLHttpRequest();
-var x=[];
-var n_dis=0;
-var n_arr=0;
-var intervallo;
-dimWin=window.innerWidth-400;
-function main(){
-	
+var n_arrivati=0;
+var n_spostamenti=0;
+document.addEventListener('DOMContentLoaded', function(){
+	opzioni  =  "<option value='rossa'>Rosso</option>"+
+	"<option value='verde'>Verde</option>"+
+	"<option value='gialla'>Giallo</option>"+
+	"<option value='nera'>Nero</option>"+
+	"<option value='azzurra'>Azzurro</option>";
 	formInizio = document.getElementById('form_inizio');
-	//bottoneInizio=document.getElementById("bottone_inizio");
 	bottoneAggiungi=document.getElementById("bottone_aggiungi");
 	bottoneAvvia=document.getElementById("bottone_avvia");
 	divPartecipanti= document.getElementById("partecipanti");
 	divInformazioniForm= document.getElementById("informazioni");
 	divGara=document.getElementById("mostraGara");
-	//bottoneInizio.addEventListener('click', displayForm);
-	if(bottoneAggiungi!=null)
-		bottoneAggiungi.addEventListener('click', aggiungiPartecipante);
+	inputN_elemets=document.getElementById("n_elements");
+	nElementi=0;
+	request = new XMLHttpRequest();
+	var intervallo;
+		if(bottoneAggiungi!=null)
+		nElementi= bottoneAggiungi.addEventListener('click', aggiungiPartecipante.bind(bottoneAggiungi, opzioni,nElementi));
 	if(bottoneAvvia!=null)
-		bottoneAvvia.addEventListener('click', invia);
+		bottoneAvvia.addEventListener('click', invia.bind(bottoneAvvia, request, formInizio));
+	dimWin=window.innerWidth-400;
 	request.addEventListener('readystatechange', onReadyStateChange);
-	request.open('POST', "http://127.0.0.1/Lezione%204/inc/corsa.php", true);
-}
+	request.open('POST', "inc/corsa.php", true);
+});
 
 function onReadyStateChange(){
 	if (this.readyState === 4 && this.status === 200) {
@@ -31,36 +32,29 @@ function onReadyStateChange(){
 
 	}
 }
-function aggiungiPartecipante(){
-	opzioni  =  "<option value='rossa'>Rosso</option>"+
-	"<option value='verde'>Verde</option>"+
-	"<option value='gialla'>Giallo</option>"+
-	"<option value='nera'>Nero</option>"+
-	"<option value='azzurra'>Azzurro</option>";
-	document.getElementById("divCon"+l).innerHTML=
-	"<div><label>Nome: <input type='text' id='user"+l+"'></label></div>"+
+function aggiungiPartecipante(_opzioni){
+	contatore =inputN_elemets.value;
+	if(contatore!=7){
+	document.getElementById("partecipanti").insertAdjacentHTML( 'beforeend', 
+	"<div>"+
+	"<div><label>Nome: <input type='text' id='user"+contatore+"' name='user"+contatore+"'></label></div>"+
 	"<div><label>Colore:"+ 
-	"<select id='color"+l+"'>"+opzioni+"</select></label></div>"+
+	"<select id='color"+contatore+"' name='color"+contatore+"'>"+_opzioni+"</select></label></div>"+
 	"</div>"+
-	"<div id='divCon"+(l+1)+"'></div>"
-	;
-	l++;
-	divInformazioniForm.innerHTML="<input type='hidden' name='n_elements'"+
-	"value='"+l+"'>";
+	"</div>");
+	contatore++;
+	inputN_elemets.value=contatore;
+	if(contatore==7){
+		this.disabled=true;
+	}
+	}
+	
 }
-function invia(){
-	for(i=0;i<l;i++){
-		nome=document.getElementById("user"+i).value;
-		colore=document.getElementById("color"+i).value;
-		x.push({
-			'nome': nome,
-			'colore' : colore
-		});
-	} 
-	var fd = new FormData();
-	fd.append('partecipanti', JSON.stringify(x));
-	fd.append('n_elements',l);
-	request.send(fd);
+function invia(_request,_nElementi){
+	console.log(formInizio);
+	var fd = new FormData(formInizio);
+	
+	_request.send(fd);
 	return false;
 }
 function visualizza(risposta){
@@ -82,25 +76,25 @@ function visualizza(risposta){
 	
 function elaborazione(risposta){
 		
-	
-	if(n_arr<risposta.length){
+		if(n_arrivati<risposta.length){
 			for(i=0; i<risposta.length ;i++){
 				if(risposta[i].passi!=-1){
-							if(n_dis<risposta[i].passi){
-					spostamento=(dimWin*risposta[i].distanza[n_dis])/100;
+							if(n_spostamenti<risposta[i].passi){
+					spostamento=(dimWin*risposta[i].distanza[n_spostamenti])/100;
 					document.getElementById("macchina"+i).style.left= spostamento+"px";
 				}
 				else{ 
-					n_arr++;
-					document.getElementById("divPart"+i).innerHTML+="<label style='position: absolute; left:"+dimWin/2+"px'>"+n_arr+"</label>";
+					n_arrivati++;
+					document.getElementById("divPart"+i).innerHTML+="<label style='position: absolute; left:"+dimWin/2+"px'>"+n_arrivati+"</label>";
 					risposta[i].passi=-1;
 				}
 			}
 			
 			}
-			n_dis++;
+			n_spostamenti++;
+	}
 		
-	} else {
+	 else {
 		console.log("sono uscito");
 	clearInterval(intervallo);
 }

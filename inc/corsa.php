@@ -2,14 +2,13 @@
 
 
 include 'classeMacchina.php';
-$giocatore = json_decode($_POST['partecipanti']);
 $macchina = [];
 $n_e=$_POST["n_elements"];
 if(isset($_POST["n_elements"])){
 	
 	for($i=0;$i<$n_e;$i++){
-		$colore = $giocatore[$i]->colore;
-		$nome = $giocatore[$i]->nome;
+		$colore = $_POST["color".$i];
+		$nome = $_POST["user".$i];
 		array_push($macchina, new Macchina($colore,$nome));
 	}
 	$h=0;
